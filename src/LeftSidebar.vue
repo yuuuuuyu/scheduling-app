@@ -37,6 +37,9 @@ withDefaults(
   overflow-y: auto;
   height: 100%;
 
+  .drag-group-item {
+    flex: 1;
+  }
   .drag-group {
     margin: 0 18px 24px;
 

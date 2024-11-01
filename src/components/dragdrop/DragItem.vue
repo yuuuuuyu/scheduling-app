@@ -29,13 +29,13 @@ const onDragend = () => dragStore.remove(props.groupName)
 </script>
 <style lang="scss" scoped>
 .drag-item {
-  width: 100px;
+  width: 100%;
   height: 20px;
   display: flex;
   flex-direction: column;
 
   &__el {
-    width: 100px;
+    width: 100%;
     height: 20px;
     border-radius: 4px;
   }
