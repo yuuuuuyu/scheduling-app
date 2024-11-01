@@ -47,8 +47,8 @@ const datePickerValue = ref([])
 /**
  * 快捷设置
  */
-const options = [30, 60, 90]
-const segmented = ref(30)
+const options = [30, 60, 2000]
+const segmented = ref(2000)
 const quickQuery = v => {
   totalDays.value = v
 

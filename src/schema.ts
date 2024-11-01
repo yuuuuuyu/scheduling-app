@@ -2,10 +2,34 @@ export const treeData = [
   {
     label: "任务1",
     children: [
-      { key: "demo-component", label: "任务1-1", column: 1, row: 1 },
-      { key: "demo-component", label: "任务1-2", column: 3, row: 1 },
-      { key: "demo-component", label: "任务1-3", column: 2, row: 1 },
-      { key: "demo-component", label: "任务1-4", column: 1, row: 1 },
+      {
+        key: "demo-component",
+        label: "任务1-1",
+        column: 1,
+        row: 1,
+        color: "red",
+      },
+      {
+        key: "demo-component",
+        label: "任务1-2",
+        column: 3,
+        row: 1,
+        color: "red",
+      },
+      {
+        key: "demo-component",
+        label: "任务1-3",
+        column: 2,
+        row: 1,
+        color: "red",
+      },
+      {
+        key: "demo-component",
+        label: "任务1-4",
+        column: 1,
+        row: 1,
+        color: "red",
+      },
     ],
   },
   {
@@ -50,3 +74,4 @@ export const resources = [
     id: "5",
   },
 ]
+

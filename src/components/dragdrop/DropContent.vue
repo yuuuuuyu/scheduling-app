@@ -164,7 +164,6 @@ const getRow = num =>
 const onDragenter = e => {
   e.preventDefault()
   const dragData = dragStore.get(props.groupName)
-  console.log(dragData, 222)
 
   if (dragData) {
     current.column = dragData.column
@@ -178,8 +177,6 @@ const onDragenter = e => {
 
 // 在目标中移动
 const onDragover = e => {
-  console.log(333)
-
   e.preventDefault()
   const dragData = dragStore.get(props.groupName)
   if (dragData) {
@@ -219,21 +216,21 @@ const onDrop = async e => {
     if (dragData.id) {
       dragData.x = current.x
       dragData.y = current.y
-      //   dragData.resourceId = resources.filter(
-      //     (r, index) => index == current.y
-      //   )?.[0]?.id
-      //   ;(dragData.start = dropHeaderRef.value.getDateByIndex(current.x + 1)),
-      //     (dragData.end = dropHeaderRef.value.getDateByIndex(
-      //       current.x + dragData?.column
-      //     ))
+      dragData.resourceId = resources.filter(
+        (r, index) => index == current.y
+      )?.[0]?.id
+      ;(dragData.start = dropHeaderRef.value.getDateByIndex(current.x + 1)),
+        (dragData.end = dropHeaderRef.value.getDateByIndex(
+          current.x + dragData?.column
+        ))
     } else {
       list.value.push({
         ...dragData,
         x: current.x,
         y: current.y,
-        // start: dropHeaderRef.value.getDateByIndex(current.x + 1),
-        // end: dropHeaderRef.value.getDateByIndex(current.x + dragData?.column),
-        // resourceId: resources.filter((r, index) => index == current.y)?.[0]?.id,
+        start: dropHeaderRef.value.getDateByIndex(current.x + 1),
+        end: dropHeaderRef.value.getDateByIndex(current.x + dragData?.column),
+        resourceId: resources.filter((r, index) => index == current.y)?.[0]?.id,
         id: new Date().getTime(),
       })
     }
@@ -302,7 +299,7 @@ defineExpose({
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 6px;
+
   &__preview,
   &__drop-container {
     display: grid;

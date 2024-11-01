@@ -72,8 +72,6 @@ const onDragend = e => {
 }
 
 const onMousedown = e => {
-  console.log(e, 111)
-
   dragStore.set(props.groupName, props.data)
   emits("resize-start")
   resizeing.value = true
@@ -102,7 +100,11 @@ const unset = target => {
 </script>
 
 <style lang="scss" scoped>
+// TODO: 可以开放拖拽
 .preview-item {
+  height: 80%;
+  margin-top: 5px;
+  margin-bottom: 5px;
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
@@ -110,7 +112,7 @@ const unset = target => {
   opacity: 1;
   user-select: none;
   overflow: auto;
-  resize: both;
+  //   resize: both;
 
   &__default {
     position: absolute;
@@ -122,7 +124,7 @@ const unset = target => {
     background: red;
     user-select: none;
     box-sizing: border-box;
-    border-radius: 6px;
+    // border-radius: 6px;
     background-color: #efefef;
     border: 2px solid #2c68f325;
     &:hover {
@@ -145,14 +147,15 @@ const unset = target => {
     position: absolute;
     cursor: pointer;
     right: 4px;
-    top: 4px;
+    top: 50%;
+    transform: translateY(-50%);
     height: 20px;
     width: 20px;
 
     &:after,
     &:before {
       content: "";
-      background: #666;
+      background: #fff;
       width: 16px;
       height: 2px;
       margin: auto;

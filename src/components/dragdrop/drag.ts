@@ -77,7 +77,7 @@ export const useBoxSize = (
     // TODO 针对不同场景可以等分
     // width: (width.value - (column - 1) * gap) / column,
     // height: (height.value - (row - 1) * gap) / row,
-    width: 30,
+    width: 50,
     height: 50,
   }))
 }

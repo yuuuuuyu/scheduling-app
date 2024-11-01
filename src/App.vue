@@ -5,6 +5,7 @@ import DropContent from "./components/dragdrop/DropContent.vue"
 import PreviewLayout from "./components/dragdrop/PreviewLayout.vue"
 import ToolBar from "./components/tool/ToolBar.vue"
 import Header from "./components/tool/Header.vue"
+import Code from "./components/tool/Code.vue"
 
 import { treeData, resources } from "./schema"
 
@@ -22,7 +23,12 @@ const handleTotalDays = days => {
 const datePickerValue = ref([])
 const toolBarHandler = dateArr => {
   datePickerValue.value = dateArr
+  isShow.value = false
+  setTimeout(() => {
+    isShow.value = true
+  }, 0)
 }
+const isShow = ref(true)
 
 provide("dropHeaderRef", dropHeaderRef)
 </script>
@@ -50,7 +56,7 @@ provide("dropHeaderRef", dropHeaderRef)
           />
           <div class="drag-container__body">
             <DropContent
-              :key="Math.random()"
+              v-if="isShow"
               v-model="data"
               ref="dropContentRef"
               group-name="drag-demo"
@@ -60,14 +66,16 @@ provide("dropHeaderRef", dropHeaderRef)
             >
               <template #preview-item="{ data }">
                 <div
-                  style="height: 100%; background: #f9f1c7; border-radius: 6px"
+                  style="height: 100%; border-radius: 6px"
+                  :style="{ 'background-color': data.color || '#409eff' }"
                 ></div>
               </template>
               <template #move-mask="{ isPutDown }">
                 <div
                   :style="{
                     width: '100%',
-                    height: '100%',
+                    height: '80%',
+                    marginTop: '4%',
                     border: '2px solid #2867f979',
                     backgroundColor: isPutDown ? '#2867f91c' : '#ff000055',
                     borderColor: isPutDown ? '#2c68f3' : '#ff000079',
@@ -76,6 +84,7 @@ provide("dropHeaderRef", dropHeaderRef)
                     justifyContent: 'center',
                     alignItems: 'center',
                     fontWeight: '600',
+                    fontSize: '10px',
                   }"
                 >
                   {{ isPutDown ? "可以放置" : "不可放置" }}
@@ -85,7 +94,10 @@ provide("dropHeaderRef", dropHeaderRef)
           </div>
         </div>
       </div>
-      {{ data }}
+
+      <div class="code-box">
+        <code>{{ data }}</code>
+      </div>
     </div>
   </div>
 </template>
@@ -129,8 +141,10 @@ provide("dropHeaderRef", dropHeaderRef)
         flex-direction: column;
         background: #fff;
         border-right: 1px solid #ddd;
+        box-shadow: 1px 0px 8px -5px rgba(0, 0, 0, 1);
+        z-index: 9;
         .resource-title {
-          height: 106px;
+          height: 126px;
           font-size: 20px;
           border-bottom: 1px solid #ddd;
           font-weight: bold;
@@ -152,7 +166,16 @@ provide("dropHeaderRef", dropHeaderRef)
       }
       .schedule {
         background: #fff;
+        overflow: auto;
       }
+    }
+    .code-box {
+      width: 100%;
+      height: 300px;
+      background-color: #fff;
+      margin-top: 20px;
+      padding: 20px;
+      box-sizing: border-box;
     }
   }
 }
