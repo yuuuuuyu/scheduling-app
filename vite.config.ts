@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue"
 const root: string = process.cwd()
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: `./`,
+  base: `/schedule`,
   root,
   plugins: [vue()],
   build: {
@@ -13,7 +13,7 @@ export default defineConfig({
     sourcemap: false,
     brotliSize: false,
     chunkSizeWarningLimit: 1500,
-    outDir: `dist/drag-drop`,
+    outDir: `dist/schedule`,
   },
 })
 
