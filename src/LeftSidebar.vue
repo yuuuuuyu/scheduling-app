@@ -8,11 +8,7 @@
     >
       <template #default="{ node, data }">
         <div class="drag-group-item">
-          <DragItem
-            :data="data"
-            :groupName="groupName"
-            @click="onDragItemClick($event, data)"
-          />
+          <DragItem :data="data" :groupName="groupName" />
         </div>
       </template>
     </el-tree>
