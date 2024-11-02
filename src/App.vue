@@ -8,6 +8,7 @@ import Header from "./components/tool/Header.vue"
 import Code from "./components/tool/Code.vue"
 
 import { treeData, resources } from "./schema"
+import { useBoxSize } from "./components/dragdrop/drag"
 
 const dropContentRef = ref<InstanceType<typeof DropContent>>()
 const dropHeaderRef = ref<InstanceType<typeof Header>>()
@@ -29,6 +30,9 @@ const toolBarHandler = dateArr => {
   }, 0)
 }
 const isShow = ref(true)
+
+// 动态设置容器宽
+const boxSize = useBoxSize()
 
 provide("dropHeaderRef", dropHeaderRef)
 </script>
@@ -54,7 +58,10 @@ provide("dropHeaderRef", dropHeaderRef)
             :date-picker-value="datePickerValue"
             @totalDaysCalculated="handleTotalDays"
           />
-          <div class="drag-container__body">
+          <div
+            class="drag-container__body"
+            :style="{ width: boxSize.width * columns + 'px' }"
+          >
             <DropContent
               v-if="isShow"
               v-model="data"
