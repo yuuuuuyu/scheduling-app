@@ -1,57 +1,17 @@
-<script setup lang="ts">
-import { ref, provide } from "vue"
-import LeftSidebar from "./LeftSidebar.vue"
-import DropContent from "./components/dragdrop/DropContent.vue"
-import PreviewLayout from "./components/dragdrop/PreviewLayout.vue"
-import ToolBar from "./components/tool/ToolBar.vue"
-import Header from "./components/tool/Header.vue"
-import Code from "./components/tool/Code.vue"
-
-import { treeData, resources } from "./schema"
-import { useBoxSize } from "./components/dragdrop/drag"
-
-const dropContentRef = ref<InstanceType<typeof DropContent>>()
-const dropHeaderRef = ref<InstanceType<typeof Header>>()
-
-// 最终数据
-const data = ref([])
-
-// 根据表头设置的日期范围 计算出列数
-const columns = ref(0)
-const handleTotalDays = days => {
-  columns.value = days
-}
-const datePickerValue = ref([])
-const toolBarHandler = dateArr => {
-  datePickerValue.value = dateArr
-  isShow.value = false
-  setTimeout(() => {
-    isShow.value = true
-  }, 0)
-}
-const isShow = ref(true)
-
-// 动态设置容器宽
-const boxSize = useBoxSize()
-
-provide("dropHeaderRef", dropHeaderRef)
-</script>
 <template>
   <div class="drag-container">
     <div class="drag-container__left">
+      <!-- 左侧树 -->
       <LeftSidebar :list="treeData" group-name="drag-demo" />
     </div>
     <div class="drag-container__right">
+      <!-- 顶部操作栏 -->
       <ToolBar ref="dropToolBarRef" @query="toolBarHandler" />
-
       <div class="drag-container__box">
-        <div class="resources">
-          <div class="resource-title">资源</div>
-          <div class="resource-name" v-for="item in resources" :key="item.id">
-            {{ item.name }}
-          </div>
-        </div>
+        <!-- 资源列表 -->
+        <Resources :resources="resources" />
         <div class="schedule">
+          <!-- 时间轴 -->
           <Header
             class="drag-container__head"
             ref="dropHeaderRef"
@@ -62,6 +22,7 @@ provide("dropHeaderRef", dropHeaderRef)
             class="drag-container__body"
             :style="{ width: boxSize.width * columns + 'px' }"
           >
+            <!-- 拖拽展示区 -->
             <DropContent
               v-if="isShow"
               v-model="data"
@@ -108,6 +69,43 @@ provide("dropHeaderRef", dropHeaderRef)
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { ref, provide } from "vue"
+import LeftSidebar from "./components/tools/LeftSidebar.vue"
+import DropContent from "./components/dragdrop/DropContent.vue"
+import ToolBar from "./components/tools/ToolBar.vue"
+import Header from "./components/tools/Header.vue"
+import Resources from "./components/tools/Resources.vue"
+
+import { treeData, resources } from "./schema"
+import { useBoxSize } from "./components/dragdrop/drag"
+
+const dropContentRef = ref<InstanceType<typeof DropContent>>()
+const dropHeaderRef = ref<InstanceType<typeof Header>>()
+
+// 最终数据
+const data = ref([])
+
+// 根据表头设置的日期范围 计算出列数
+const columns = ref(0)
+const handleTotalDays = days => {
+  columns.value = days
+}
+const datePickerValue = ref([])
+const toolBarHandler = dateArr => {
+  datePickerValue.value = dateArr
+  isShow.value = false
+  setTimeout(() => {
+    isShow.value = true
+  }, 0)
+}
+const isShow = ref(true)
+
+// 动态设置容器宽
+const boxSize = useBoxSize()
+
+provide("dropHeaderRef", dropHeaderRef)
+</script>
 <style scoped lang="scss">
 .drag-container {
   height: 100vh;
@@ -116,9 +114,10 @@ provide("dropHeaderRef", dropHeaderRef)
   background-color: #fff;
   display: flex;
   flex-shrink: 0;
+  user-select: none;
 
   &__left {
-    width: 300px;
+    width: 250px;
     padding: 20px;
   }
 
@@ -141,36 +140,6 @@ provide("dropHeaderRef", dropHeaderRef)
     .drag-container__box {
       margin-top: 10px;
       display: flex;
-      .resources {
-        width: 200px;
-        min-width: 200px;
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-        border-right: 1px solid #ddd;
-        box-shadow: 1px 0px 8px -5px rgba(0, 0, 0, 1);
-        z-index: 9;
-        .resource-title {
-          height: 126px;
-          font-size: 20px;
-          border-bottom: 1px solid #ddd;
-          font-weight: bold;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .resource-name {
-          height: 50px;
-          padding: 10px;
-          border-bottom: 1px solid #ddd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          &:last-child {
-            border-bottom: none;
-          }
-        }
-      }
       .schedule {
         background: #fff;
         overflow: auto;
@@ -180,7 +149,7 @@ provide("dropHeaderRef", dropHeaderRef)
       width: 100%;
       height: 300px;
       background-color: #fff;
-      margin-top: 20px;
+      margin-top: 12px;
       padding: 20px;
       box-sizing: border-box;
     }

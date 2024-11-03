@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import DragItem from "./components/dragdrop/DragItem.vue"
+import DragItem from "../dragdrop/DragItem.vue"
 withDefaults(
   defineProps<{
     list: DragSchema[]
