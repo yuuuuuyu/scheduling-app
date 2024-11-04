@@ -131,6 +131,8 @@ provide("dropHeaderRef", dropHeaderRef)
     overflow-y: auto;
     margin: auto;
     margin-right: 10px;
+    display: flex;
+    flex-direction: column;
   }
   &__body {
     display: flex;
@@ -152,6 +154,7 @@ provide("dropHeaderRef", dropHeaderRef)
       margin-top: 12px;
       padding: 20px;
       box-sizing: border-box;
+      flex: 1;
     }
   }
 }
