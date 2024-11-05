@@ -9,8 +9,24 @@
         <div class="month" v-for="month in year.months" :key="month.name">
           <div class="month-label">{{ month.name }}</div>
           <div class="days">
-            <div class="day" v-for="day in month.days" :key="day">
-              {{ day }}
+            <div
+              class="day"
+              :class="{
+                'is-weekend': day.isWeekend === 6 || day.isWeekend === 0,
+              }"
+              v-for="day in month.days"
+              :key="day"
+            >
+              <span>{{ day.day }}</span>
+              <span v-if="day.isWeekend === 6 || day.isWeekend === 0">
+                {{
+                  day.isWeekend === 6
+                    ? "星期六"
+                    : day.isWeekend === 0
+                    ? "星期日"
+                    : ""
+                }}
+              </span>
             </div>
           </div>
         </div>
@@ -76,8 +92,6 @@ const generateDateHeaders = dataArr => {
 
   totalDays.value = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1
 
-  emit("totalDaysCalculated", totalDays.value)
-
   if (start > end) return
 
   const current = new Date(start)
@@ -102,8 +116,12 @@ const generateDateHeaders = dataArr => {
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, monthIndex, day)
       if (date >= start && date <= end) {
-        monthObj.days.push(day)
-        dates.push(new Date(year, monthIndex, day))
+        const dayOfWeek = date.getDay() // 0 = Sunday, 6 = Saturday
+        // const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
+        const isWeekend = dayOfWeek
+
+        monthObj.days.push({ day, isWeekend })
+        dates.push({ day, isWeekend })
       }
     }
 
@@ -111,8 +129,11 @@ const generateDateHeaders = dataArr => {
     current.setDate(1)
   }
 
+  console.log(headers)
   dateHeaders.value = headers
   flatDates.value = dates
+
+  emit("totalDaysCalculated", totalDays.value, dates)
 }
 
 defineExpose({
@@ -158,11 +179,19 @@ defineExpose({
   width: 50px;
   height: 50px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
+  &.is-weekend {
+    background: #f4f4f4;
+    color: #999;
+    span:last-child {
+      font-size: 10px;
+    }
+  }
 }
 </style>
 
