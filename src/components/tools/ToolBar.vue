@@ -25,6 +25,15 @@
     </div>
 
     <div class="toolbar-item" style="flex: 1">
+      <div class="toolbar-item__title">模式</div>
+      <el-segmented
+        v-model="mode"
+        :options="modeOptions"
+        @change="selectMode"
+      />
+    </div>
+
+    <div class="toolbar-item" style="flex: 1">
       <div class="toolbar-item__title">总天数</div>
       <div>
         {{ totalDays }}
@@ -38,7 +47,7 @@ import { ref, onMounted } from "vue"
 import { useBoxSize } from "../dragdrop/drag"
 import moment from "moment"
 
-const emit = defineEmits(["query"])
+const emit = defineEmits(["query", "mode"])
 
 // 计算总天数
 const totalDays = ref(0)
@@ -69,6 +78,15 @@ onMounted(() => {
 const selectDateRange = v => {
   totalDays.value = moment(v[1]).diff(v[0], "days") + 1
   emit("query", datePickerValue.value)
+}
+
+/**
+ * 模式
+ */
+const modeOptions = ["Normal", "Weekend"]
+const mode = ref("Weekend")
+const selectMode = v => {
+  emit("mode", v)
 }
 </script>
 <style lang="scss" scoped>

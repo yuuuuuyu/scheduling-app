@@ -10,7 +10,10 @@
       <template v-for="x in rowCount">
         <div
           class="bg-column"
-          v-for="y in columnCount"
+          :class="{
+            'is-weekend': isWeekend(yindex),
+          }"
+          v-for="(y, yindex) in columnCount"
           :key="`${x}-${y}`"
         ></div>
       </template>
@@ -84,6 +87,10 @@ const props = withDefaults(
     beforeDrop?: CallbackFun
     /** 删除前的钩子 如果返回 false 则取消删除 */
     beforeRemove?: CallbackFun
+    /** 表头时间轴的索引 */
+    indexs?: Array
+    /** 是否显示周末 */
+    mode?: String
   }>(),
   {
     groupName: "DrapDrop",
@@ -93,6 +100,8 @@ const props = withDefaults(
     mask: true,
     beforeDrop: () => true,
     beforeRemove: () => true,
+    indexs: [],
+    mode: "Weekend",
   }
 )
 
@@ -284,6 +293,15 @@ const onResizeEnd = async () => {
   }
 }
 
+// 判断周六日
+const isWeekend = yindex => {
+  return (
+    props.mode === "Weekend" &&
+    (props.indexs[yindex].isWeekend === 6 ||
+      props.indexs[yindex].isWeekend === 0)
+  )
+}
+
 defineExpose({
   // 添加行
   addRow: () => (rowCount.value = rowCount.value + 1),
@@ -318,6 +336,9 @@ defineExpose({
       pointer-events: none;
       border-right: 1px solid #e6e6e6;
       border-bottom: 1px solid #e6e6e6;
+      &.is-weekend {
+        background-color: #f5f5f5;
+      }
     }
   }
 

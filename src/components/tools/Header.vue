@@ -12,13 +12,13 @@
             <div
               class="day"
               :class="{
-                'is-weekend': day.isWeekend === 6 || day.isWeekend === 0,
+                'is-weekend': getMode(day),
               }"
               v-for="day in month.days"
               :key="day"
             >
               <span>{{ day.day }}</span>
-              <span v-if="day.isWeekend === 6 || day.isWeekend === 0">
+              <span v-if="getMode(day)">
                 {{
                   day.isWeekend === 6
                     ? "星期六"
@@ -44,6 +44,7 @@ const emit = defineEmits(["totalDaysCalculated"])
 
 const props = defineProps({
   datePickerValue: Array,
+  mode: String,
 })
 
 watch(
@@ -129,15 +130,18 @@ const generateDateHeaders = dataArr => {
     current.setDate(1)
   }
 
-  console.log(headers)
   dateHeaders.value = headers
   flatDates.value = dates
 
   emit("totalDaysCalculated", totalDays.value, dates)
 }
 
+const getMode = day => {
+  return (
+    props.mode === "Weekend" && (day.isWeekend === 6 || day.isWeekend === 0)
+  )
+}
 defineExpose({
-  // TODO
   getDateByIndex,
 })
 </script>

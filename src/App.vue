@@ -6,7 +6,11 @@
     </div>
     <div class="drag-container__right">
       <!-- 顶部操作栏 -->
-      <ToolBar ref="dropToolBarRef" @query="toolBarHandler" />
+      <ToolBar
+        ref="dropToolBarRef"
+        @query="toolBarHandler"
+        @mode="modeChange"
+      />
       <div class="drag-container__box">
         <!-- 资源列表 -->
         <Resources :resources="resources" />
@@ -15,6 +19,7 @@
           <Header
             class="drag-container__head"
             ref="dropHeaderRef"
+            :mode="mode"
             :date-picker-value="datePickerValue"
             @totalDaysCalculated="handleTotalDays"
           />
@@ -23,6 +28,7 @@
             :style="{ width: boxSize.width * columns + 'px' }"
           >
             <!-- 拖拽展示区 -->
+            <!-- columns改造 -->
             <DropContent
               v-if="isShow"
               v-model="data"
@@ -30,7 +36,9 @@
               group-name="drag-demo"
               :row="resources.length"
               :column="columns"
+              :indexs="dateAxias"
               :gap="0"
+              :mode="mode"
             >
               <template #preview-item="{ data }">
                 <div
@@ -88,8 +96,10 @@ const data = ref([])
 
 // 根据表头设置的日期范围 计算出列数
 const columns = ref(0)
-const handleTotalDays = days => {
+const dateAxias = ref([])
+const handleTotalDays = (days, dates) => {
   columns.value = days
+  dateAxias.value = dates
 }
 const datePickerValue = ref([])
 const toolBarHandler = dateArr => {
@@ -100,6 +110,12 @@ const toolBarHandler = dateArr => {
   }, 0)
 }
 const isShow = ref(true)
+
+// 模式切换: 是否展示周末
+const mode = ref("Weekend")
+const modeChange = v => {
+  mode.value = v
+}
 
 // 动态设置容器宽
 const boxSize = useBoxSize()
