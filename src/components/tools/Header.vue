@@ -74,7 +74,7 @@ const flatDates = ref([])
 const selectedDate = ref("")
 const getDateByIndex = index => {
   if (index >= 0 && index < flatDates.value.length) {
-    const date = flatDates.value[index]
+    const date = flatDates.value[index].date
     return (selectedDate.value = date.toISOString().split("T")[0])
   } else {
     return (selectedDate.value = "索引超出范围")
@@ -122,7 +122,7 @@ const generateDateHeaders = dataArr => {
         const isWeekend = dayOfWeek
 
         monthObj.days.push({ day, isWeekend })
-        dates.push({ day, isWeekend })
+        dates.push({ date, isWeekend })
       }
     }
 

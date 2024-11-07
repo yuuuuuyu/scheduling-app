@@ -28,7 +28,6 @@
             :style="{ width: boxSize.width * columns + 'px' }"
           >
             <!-- 拖拽展示区 -->
-            <!-- columns改造 -->
             <DropContent
               v-if="isShow"
               v-model="data"

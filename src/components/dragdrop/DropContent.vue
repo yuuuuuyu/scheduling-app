@@ -139,7 +139,9 @@ const isPutDown = computed(() => {
     current.x + current.column,
     current.y + current.row,
   ]
-  return (
+
+  // 常规判断是否可以putdown
+  const _isPutDown =
     booleanWithin([0, 0, columnCount.value, rowCount.value], currentXy) &&
     list.value.every(
       item =>
@@ -149,7 +151,17 @@ const isPutDown = computed(() => {
           currentXy
         )
     )
-  )
+  if (props.mode == "Weekend") {
+    // 周末模式下，不允许拖拽到周末
+    return (
+      props.indexs[current.x]?.isWeekend !== 6 &&
+      props.indexs[current.x]?.isWeekend !== 0 &&
+      props.indexs[current.x + current.column - 1]?.isWeekend !== 6 &&
+      props.indexs[current.x + current.column - 1]?.isWeekend !== 0 &&
+      _isPutDown
+    )
+  }
+  return _isPutDown
 })
 
 // 删除行
