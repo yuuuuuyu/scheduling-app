@@ -12,7 +12,7 @@ export const treeData = [
       {
         key: "demo-component",
         label: "任务1-2",
-        column: 3,
+        column: 5,
         row: 1,
         color: "red",
       },

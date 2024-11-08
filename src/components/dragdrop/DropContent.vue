@@ -153,13 +153,22 @@ const isPutDown = computed(() => {
     )
   if (props.mode == "Weekend") {
     // 周末模式下，不允许拖拽到周末
-    return (
-      props.indexs[current.x]?.isWeekend !== 6 &&
-      props.indexs[current.x]?.isWeekend !== 0 &&
-      props.indexs[current.x + current.column - 1]?.isWeekend !== 6 &&
-      props.indexs[current.x + current.column - 1]?.isWeekend !== 0 &&
-      _isPutDown
-    )
+    // 不允许跨周末/休息日？万恶资本主义
+    // 当前任务所跨天数
+    const spanDays = props.indexs.slice(current.x, current.x + current.column)
+
+    let _weekendOrRest = false
+    for (let i = 0; i < spanDays.length; i++) {
+      if (
+        spanDays[i].isRest ||
+        spanDays[i].isWeekend == 6 ||
+        spanDays[i].isWeekend == 0
+      ) {
+        _weekendOrRest = true
+        break
+      }
+    }
+    return _isPutDown && !_weekendOrRest
   }
   return _isPutDown
 })
@@ -290,6 +299,7 @@ const onResizeEnd = async () => {
   current.show = false
   const dragData = dragStore.get(props.groupName)
   if (
+    dragData &&
     isPutDown.value &&
     (await props.beforeDrop(
       {
@@ -307,10 +317,12 @@ const onResizeEnd = async () => {
 
 // 判断周六日
 const isWeekend = yindex => {
+  // 扩展自定义休息日
   return (
-    props.mode === "Weekend" &&
-    (props.indexs[yindex].isWeekend === 6 ||
-      props.indexs[yindex].isWeekend === 0)
+    (props.mode === "Weekend" &&
+      (props.indexs[yindex]?.isWeekend === 6 ||
+        props.indexs[yindex]?.isWeekend === 0)) ||
+    props.indexs[yindex]?.isRest
   )
 }
 

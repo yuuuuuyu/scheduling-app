@@ -24,6 +24,8 @@
                     ? "星期六"
                     : day.isWeekend === 0
                     ? "星期日"
+                    : day.isRest
+                    ? "休息日"
                     : ""
                 }}
               </span>
@@ -84,7 +86,7 @@ const getDateByIndex = index => {
 /**
  * 生成日期头
  */
-const datePickerValue = ref([])
+const restDays = ref([])
 const generateDateHeaders = dataArr => {
   const start = new Date(new Date(dataArr[0]).setHours(0, 0, 0, 0))
   const end = new Date(dataArr[1])
@@ -120,16 +122,19 @@ const generateDateHeaders = dataArr => {
         const dayOfWeek = date.getDay() // 0 = Sunday, 6 = Saturday
         // const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
         const isWeekend = dayOfWeek
-
-        monthObj.days.push({ day, isWeekend })
-        dates.push({ date, isWeekend })
+        // 判断day是否被设置为休息日
+        let isRest = false
+        if (restDays.value.includes(day)) {
+          isRest = true
+        }
+        monthObj.days.push({ day, isWeekend, isRest })
+        dates.push({ date, isWeekend, isRest })
       }
     }
 
     current.setMonth(current.getMonth() + 1)
     current.setDate(1)
   }
-
   dateHeaders.value = headers
   flatDates.value = dates
 
@@ -138,11 +143,28 @@ const generateDateHeaders = dataArr => {
 
 const getMode = day => {
   return (
-    props.mode === "Weekend" && (day.isWeekend === 6 || day.isWeekend === 0)
+    props.mode === "Weekend" &&
+    (day.isWeekend === 6 || day.isWeekend === 0 || day.isRest)
   )
 }
+
+// 设置每月固定休息日
+const setRestDay = (days = []) => {
+  restDays.value = days
+}
+watch(
+  () => restDays.value,
+  value => {
+    generateDateHeaders(props.datePickerValue)
+  },
+  {
+    deep: true,
+  }
+)
+
 defineExpose({
   getDateByIndex,
+  setRestDay,
 })
 </script>
 
@@ -156,12 +178,14 @@ defineExpose({
   background: #fff;
 }
 .year-label {
-  height: 50px;
+  height: 40px;
   line-height: 30px;
   font-weight: bold;
   font-size: 18px;
-  padding: 10px 6px;
+  padding: 10px 10px;
+  padding-bottom: 0;
   box-sizing: border-box;
+  border-right: 1px solid #ddd;
 }
 
 .months {
@@ -169,10 +193,10 @@ defineExpose({
 }
 
 .month-label {
-  margin-bottom: 5px;
   font-size: 12px;
-  padding: 0 6px 4px;
+  padding: 6px 10px;
   box-sizing: border-box;
+  border-right: 1px solid #ddd;
 }
 
 .days {

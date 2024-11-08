@@ -9,6 +9,38 @@
       />
     </div>
 
+    <!-- <div class="toolbar-item">
+      <div class="toolbar-item__title">选择日期</div>
+      <el-date-picker
+        class="toolbr-picker"
+        v-model="datePickerValue"
+        type="daterange"
+        range-separator="-"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        format="YYYY/MM/DD"
+        value-format="YYYY-MM-DD"
+        @change="selectDateRange"
+      />
+    </div> -->
+
+    <div class="toolbar-item" style="flex: 1">
+      <div class="toolbar-item__title">模式</div>
+      <el-segmented
+        v-model="mode"
+        :options="modeOptions"
+        @change="selectMode"
+      />
+    </div>
+
+    <div class="toolbar-item" style="flex: 1; justify-content: flex-end">
+      <div class="toolbar-item__title">总天数</div>
+      <div>
+        {{ totalDays }}
+      </div>
+    </div>
+  </div>
+  <div class="toolbar-container">
     <div class="toolbar-item">
       <div class="toolbar-item__title">选择日期</div>
       <el-date-picker
@@ -23,31 +55,36 @@
         @change="selectDateRange"
       />
     </div>
-
-    <div class="toolbar-item" style="flex: 1">
-      <div class="toolbar-item__title">模式</div>
-      <el-segmented
-        v-model="mode"
-        :options="modeOptions"
-        @change="selectMode"
-      />
-    </div>
-
-    <div class="toolbar-item" style="flex: 1">
-      <div class="toolbar-item__title">总天数</div>
-      <div>
-        {{ totalDays }}
-      </div>
+    <div class="toolbar-item">
+      <div class="toolbar-item__title">设置休息日</div>
+      <el-select
+        v-model="restDay"
+        multiple
+        collapse-tags
+        collapse-tags-tooltip
+        placeholder="设置每月休息日"
+        style="width: 150px"
+        @change="setRestDay"
+      >
+        <el-option
+          v-for="item in restOptions"
+          :key="item"
+          :label="item"
+          :value="item"
+        />
+      </el-select>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, inject } from "vue"
 import { useBoxSize } from "../dragdrop/drag"
 import moment from "moment"
 
-const emit = defineEmits(["query", "mode"])
+const dropHeaderRef = inject("dropHeaderRef")
+
+const emit = defineEmits(["query", "mode", "rest"])
 
 // 计算总天数
 const totalDays = ref(0)
@@ -88,12 +125,22 @@ const mode = ref("Weekend")
 const selectMode = v => {
   emit("mode", v)
 }
+/**
+ * 设置休息日
+ */
+const restDay = ref([])
+const restOptions = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  23, 24, 25, 26, 27, 28, 29, 30, 31,
+]
+const setRestDay = v => {
+  dropHeaderRef.value.setRestDay(v)
+}
 </script>
 <style lang="scss" scoped>
 .toolbar-container {
   height: 50px;
   background-color: #fff;
-  border-radius: 4px;
   padding: 6px;
   box-sizing: border-box;
   display: flex;

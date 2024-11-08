@@ -24,7 +24,7 @@ defineProps({
   box-shadow: 1px 0px 8px -5px rgba(0, 0, 0, 1);
   z-index: 9;
   .resource-title {
-    height: 126px;
+    height: 119px;
     font-size: 20px;
     border-bottom: 1px solid #ddd;
     font-weight: bold;
